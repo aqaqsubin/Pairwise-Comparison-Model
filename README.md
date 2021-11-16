@@ -1,2 +1,2 @@
-# Pairwise Comparision Model
+# Pairwise Comparison Model
  
