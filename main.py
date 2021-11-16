@@ -1,7 +1,8 @@
 import os
 from pytorch_lightning import Trainer
 from pytorch_lightning.callbacks import ModelCheckpoint
-from kobert_transformers import get_tokenizer
+from kobert_tokenizer import KoBERTTokenizer
+
 from lightning_model import LightningPCModel
 
 import argparse
@@ -14,8 +15,6 @@ from os.path import join as pjoin
 
 warnings.filterwarnings(action='ignore')
 transformers.logging.set_verbosity_error()
-
-TOKENIZER = get_tokenizer()
 
 ROOT_DIR = os.getcwd()
 MODEL_DIR = pjoin(ROOT_DIR, 'model_ckpt')
@@ -55,6 +54,8 @@ if __name__ == "__main__":
     global DATA_DIR
     DATA_DIR = args.data_dir
 
+    tokenizer = KoBERTTokenizer.from_pretrained(args.pretrained_model)
+
     print(args.gpuid)
 
     if args.train:
@@ -69,7 +70,7 @@ if __name__ == "__main__":
                 prefix=f'{args.model_name}'
             )
 
-            model = LightningPCModel(args, tokenizer=TOKENIZER)
+            model = LightningPCModel(args, tokenizer=tokenizer)
             model.train()
             trainer = Trainer(
                             check_val_every_n_epoch=1, 
